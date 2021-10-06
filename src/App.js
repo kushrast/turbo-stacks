@@ -234,7 +234,14 @@ class Knapsack extends React.Component{
       <div style={this.getStyles()}>
       { this.state.showForm ?
         <TimeForm updateTimeAvailable={this.updateTimeAvailable}/> :
-        <KnapsackResult timeAvailable={this.state.timeAvailable} resetTimeAvailable={this.resetTimeAvailable}/>
+        <div>
+          <KnapsackResult timeAvailable={this.state.timeAvailable} resetTimeAvailable={this.resetTimeAvailable}/>
+          <div class="columns is-centered" style={{paddingTop:"40px"}}>
+            <span class="column is-2 has-text-centered">
+              Time Available: {this.state.timeAvailable} <a onClick={this.resetTimeAvailable}>Reset</a>
+            </span>
+          </div>
+        </div>
       }
       </div>
       );
