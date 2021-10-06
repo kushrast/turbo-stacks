@@ -2,161 +2,243 @@ import logo from './logo.svg';
 import './App.css';
 import {Heading, Icon} from 'react-bulma-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faSlidersH } from '@fortawesome/free-solid-svg-icons';
+import { faGripHorizontal } from '@fortawesome/free-solid-svg-icons';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
+import React from 'react';
+import Typed from "typed.js";
 
 import 'bulma/css/bulma.min.css';
 
-function Header(props) {
-  const style = {
-    paddingRight: "30px"
-  };
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div class="header">          
-      <h1 class="title">
-        <span class="icon-text">
-          <span class="icon has-text-info">
-            <FontAwesomeIcon icon={faSlidersH} size="lg"/>
-          </span>
-          <span style={{"paddingLeft": "10px"}}>Turbo Stacks</span>
-        </span>
-      </h1>
-    </div>
-    );
-}
+    this.state = {
+      isMouseOverIcon: false
+    };
+  }
 
-const DraggableList = SortableContainer(({items}) => {
-  return (
-    <ul>
-      {items.map((value, index) => (
-        <DraggableListItem key={`item-${value}`} index={index} value={value} />
-      ))}
-    </ul>
-  );
-});
-const DraggableListItem = SortableElement(({value}) => 
-  {
+  toggleIsMouseOverIcon = () => {
+    this.setState({isMouseOverIcon: !this.state.isMouseOverIcon});
+  }
+
+  getIconColor = () => {
+    if (this.state.isMouseOverIcon) {
+      return "#D4EBD2";
+    } 
+    return "#DDDDDD";
+  }
+
+  render () {
     return (
-    <li>{value}</li>
-    )
-});
-
-
-function ItemCard(props) {
-  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']);
-  const [showOptions, setShowOptions] = useState(false);
-  const [showList, setShowlist] = useState(false);
-  const [alwaysShowList, setAlwaysShowList] = useState(false);
-  const [isBlurred, setBlur] = useState(true);
-  const [alwaysBlur, setAlwaysSetBlur] = useState(true);
-
-  const onSortEnd = ({oldIndex, newIndex}) => {
-    setItems(arrayMoveImmutable(items, oldIndex, newIndex));
-  };
-
-  const toggleOptions = () => {
-    setShowOptions(!showOptions);
-
-    if (!alwaysShowList) {
-      setShowlist(false);
-    }
-
-    if (!showOptions) {
-      setBlur(false);
-    } else {
-      setBlur(true);
-    }
-  }
-
-  const seeAll = () => {
-    if (!alwaysShowList) {
-      setShowlist(!showList);
-    }
-  }
-
-  const toggleAlwaysShowList = () => {
-    if (!alwaysShowList) {
-      setShowlist(true);
-    }
-
-    setAlwaysShowList(!alwaysShowList);
-  };
-
-  const getBlurStyle = () => {
-    const styles = {}
-    if (isBlurred) {
-      styles["WebkitFilter"] =  "blur(5px)";
-    }
-
-    styles["cursor"] = "pointer";
-
-    return styles;
-  }
-
-  const getStyleForSeeAll = () => {
-    const styles = {};
-    if (alwaysShowList) {
-      styles["PointerEvents"] = "none";
-      styles["color"] = "grey";
-      styles["cursor"] = "default";
-    }
-
-    return styles;
-  }
-
-  const toggleBlur = () => {
-    if (!showList) {
-      setBlur(!isBlurred);
-    }
-  }
-
-  return (
-      <div style={{paddingTop:"100px",marginLeft: "200px", marginRight: "200px"}}>
-        <div class="columns">
-          <div class="column is-2">
-            <h6 class="title is-6 bird" style={{paddingTop: "35px"}}>Chores To Do</h6>
-          </div>
-          <div class="column">
-          <div class="card">
-            <div class="card-content">
-              <div>
-                <div class="columns">
-                  <div class="column is-11" style={getBlurStyle()} onClick={toggleBlur}>
-                    { !showList ? 
-                    <div class="main-text">
-                      <ul id="items">
-                        <li class="ui-state-default" id="list-hover"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
-                      </ul>
-                    </div> :
-                    <div class="list-all">
-                      <DraggableList items={items} onSortEnd={onSortEnd} />
-                    </div>
-                      }
-                  </div>
-                  <div class="column is-1">
-                    <span class="icon show-options" style={{cursor: "pointer"}} onClick={toggleOptions}>
-                      <FontAwesomeIcon icon={faEllipsisV}/>
-                    </span>
-                  </div>
-                </div>
-            </div>
-            </div>
-            { showOptions ? 
-            <footer class="card-footer">
-                <a href="#" class="card-footer-item" id="see-all" onClick={seeAll} style={getStyleForSeeAll()}>See All</a>
-                <a href="#" class="card-footer-item"  onClick={toggleAlwaysShowList}>{alwaysShowList ? <span>Don't Always Show List</span>: <span>Always Show List</span>}</a>
-                <a href="#" class="card-footer-item">Keep Unblurred</a>
-                <a href="#" class="card-footer-item">Delete</a>
-            </footer>
-            : null }
-          </div>
+      <div>
+        <div class="columns is-centered">          
+          <div class="column is-1">
+            <FontAwesomeIcon icon={faGripHorizontal} size="6x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
           </div>
         </div>
       </div>
+      );
+  }
+}
+
+class TimeForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {value: 0};
+    this.updateTimeAvailable = this.props.updateTimeAvailable;
+  }
+
+  componentDidMount() {
+    this.setupAnimatedPrompt();
+  }
+
+  setupAnimatedPrompt() {
+    const options = {
+      strings: ["How much time do you have right now?"],
+      typeSpeed: 40,
+      startDelay: 0,
+      showCursor: true
+    };
+    this.typed = new Typed(this.el, options);
+  }
+
+  handleChange = (event) => {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit = (event) => {
+    console.log(this.state.value);
+    this.updateTimeAvailable(this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+    <div>
+      <div className="columns is-centered">
+        <div class="column is-8 has-text-centered">
+          <span className="title is-1" ref={(el) => {this.el=el;}} style={{whitespace: "pre", color: "#5D5D5D"}}></span>
+        </div>
+      </div>
+      <div className="columns is-centered">
+        <div class="column is-2" style={{paddingTop: "20px"}}>
+          <form onSubmit={this.handleSubmit}>
+            <div class="field is-grouped">
+              <p class="control">
+                <input class="input" type="number" placeholder="(minutes)" value={this.state.value} onChange={this.handleChange}/>
+              </p>
+              <p class="control">
+                <a class="button is-success" onClick={this.handleSubmit}>
+                  Search
+                </a>
+              </p>
+            </div>
+            <div style={{paddingTop:"5px", color: "grey", fontSize: "15px"}} className="has-text-centered">
+              (Minutes)
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     );
+  }
+}
+
+class KnapsackCard extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+        <div class="card" style={{padding: "20px 30px 20px 30px"}}>
+          <div class="card-content">
+            <p class="title block">
+              {this.props.activity.name}
+            </p>
+            <p class="subtitle block">
+              Details: So and So
+            </p>
+          </div>
+          <footer class="card-footer">
+            <p class="card-footer-item">
+              <span>
+                Time: {this.props.activity.time}
+              </span>
+            </p>
+            <p class="card-footer-item">
+              <a onClick={this.props.changeActivity}>
+                Spin again
+              </a>
+            </p>
+          </footer>
+        </div>
+      );
+  }
+}
+
+class KnapsackResult extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      timeAvailable: this.props.timeAvailable,
+      allActivities: [{name: "thing1", time:50}, {name: "thing2", time:40}, {name: "thing3", time:30}, {name: "thing4", time:20}],
+      validActivities: [],
+      selectedActivityIndex: 0
+    }
+  }
+
+  componentDidMount() {
+    var validActivities = [];
+    this.state.allActivities.forEach((activity, i) => {
+      if (activity.time <= this.state.timeAvailable) {
+        validActivities.push(activity);
+      }
+    });
+
+    this.setState({validActivities: validActivities, timeAvailable: this.props.timeAvailable}, this.selectActivity);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.timeAvailable !== this.props.timeAvailable) {
+
+      var validActivities = [];
+      this.state.allActivities.forEach((activity, i) => {
+        if (activity.time <= this.state.timeAvailable) {
+          validActivities.push(activity);
+        }
+      });
+
+      this.setState({validActivities: validActivities, timeAvailable: this.props.timeAvailable}, this.selectActivity);
+    }
+  }
+
+  selectActivity = () => {
+    if (this.state.validActivities.length > 0) {
+      var index = Math.floor(Math.random() * this.state.validActivities.length);
+      this.setState({selectedActivityIndex: index});
+    }
+  }
+
+  getActivity = () => {
+    if (this.state.validActivities.length > 0 && this.state.selectedActivityIndex < this.state.validActivities.length) {
+      return this.state.validActivities[this.state.selectedActivityIndex];
+    } else {
+      return "";
+    }
+  }
+
+  render() {
+    return (
+    <div className="columns is-centered">
+      <KnapsackCard activity={this.getActivity()} changeActivity={this.selectActivity}/>
+    </div>
+    );
+  }
+}
+
+class Knapsack extends React.Component{
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showForm: true,
+      timeAvailable: 0
+    }
+  }
+
+  getStyles() {
+    return {
+      paddingTop: "125px"
+    }
+  }
+
+  updateTimeAvailable = (newTimeAvailableMinutes) => {
+    this.setState({timeAvailable: newTimeAvailableMinutes});
+    this.setState({showForm: false});
+
+    console.log(newTimeAvailableMinutes);
+  }
+
+  resetTimeAvailable = () => {
+    this.setState({timeAvailable: 0, showForm: true});
+  }
+
+  render() {
+    return (
+      <div style={this.getStyles()}>
+      { this.state.showForm ?
+        <TimeForm updateTimeAvailable={this.updateTimeAvailable}/> :
+        <KnapsackResult timeAvailable={this.state.timeAvailable} resetTimeAvailable={this.resetTimeAvailable}/>
+      }
+      </div>
+      );
+  }
 }
 
 function App() {
@@ -165,7 +247,7 @@ function App() {
       <section class="section">
         <div class="container">
           <Header/>
-          <ItemCard/>
+          <Knapsack/>
         </div>
       </section>
     </div>
