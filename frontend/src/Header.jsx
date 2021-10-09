@@ -28,7 +28,12 @@ class Header extends React.Component {
       <div>
         <div class="columns is-centered">          
           <div class="column is-1 has-text-centered">
-            <FontAwesomeIcon icon={faGripHorizontal} size="5x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
+            <p className="header-text">
+              {this.props.type}
+            </p>
+            <p>
+              <FontAwesomeIcon icon={faGripHorizontal} size="5x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
+            </p>
           </div>
         </div>
       </div>
