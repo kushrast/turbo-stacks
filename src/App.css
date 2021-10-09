@@ -1,0 +1,46 @@
+.list-title-input {
+	padding: 0px 0px 0px 0px;
+	box-shadow: none !important;
+	border: 0 !important;
+	border-radius: 0px !important;
+	border-bottom: 1px solid lightgrey !important;
+	outline: 0 !important;
+	font-size: 40px !important;
+	font-weight: 700;
+}
+
+.list-item {
+	margin-left:15px;
+	padding-left: 10px;
+	padding-right:  0px;
+	margin-right: 0px;
+	border-radius: 5px;
+}
+
+/*.list-item-hover {
+	background-color: #F8F8F8;
+}*/
+
+.list-item-number {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.list-item-input {
+	padding: 0px 0px 0px 0px;
+	box-shadow: none !important;
+	border: 0 !important;
+	background-color: inherit !important;
+	border-radius: 0px !important;
+	outline: 0 !important;
+	font-size: 20px !important;
+}
+
+.list-card {
+	padding: 5px 10px 5px 10px !important;
+}
+
+.list-item-container {
+	list-style-type: none;
+	cursor: pointer;
+}
