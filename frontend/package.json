@@ -11,11 +11,15 @@
     "@testing-library/user-event": "^12.8.3",
     "array-move": "^4.0.0",
     "bulma": "^0.9.3",
-    "react": "^17.0.2",
+    "react": "latest",
     "react-bulma-components": "^4.0.7",
-    "react-dom": "^17.0.2",
+    "react-dom": "latest",
+    "react-draggable": "^4.4.4",
+    "react-fade-in": "^2.0.1",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "react-sortable-hoc": "^2.0.0",
+    "typed.js": "^2.0.12",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
