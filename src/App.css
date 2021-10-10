@@ -47,5 +47,5 @@
 
 .list-item-container {
 	list-style-type: none;
-	cursor: pointer;
+	cursor: grab;
 }

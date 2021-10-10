@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 class StorageClient {
 	constructor(){}
-	createNewList(title, listItems){}
+	createNewInstaList(title, listItems){}
+	getInstaList(listId){}
 }
 
 class LocalStorageClient extends StorageClient {
@@ -14,7 +15,7 @@ class LocalStorageClient extends StorageClient {
 		}
 	}
 
-	createNewList = (title, listItems) => {
+	createNewInstaList = (title, listItems) => {
 		var storage = this.getLocalStorage();
 		if (storage != null) {
 			var listId = uuidv4();
@@ -37,8 +38,26 @@ class LocalStorageClient extends StorageClient {
 		}
 		return "";
 	}
+
+	getInstaList = (listId) => {
+		var storage = this.getLocalStorage();
+		if (storage != null) {
+			var currentLists;
+			var currentListsAsString = storage.getItem("lists");
+
+			if (currentListsAsString == null) {
+				currentLists = {};
+			} else {
+				currentLists = JSON.parse(currentListsAsString);
+			}
+
+			return currentLists[listId];
+		}
+		return {};
+	}
 }
 
 var localStorageClient = new LocalStorageClient();
 
-export const createNewList = localStorageClient.createNewList;
+export const createNewInstaList = localStorageClient.createNewInstaList;
+export const getInstaList = localStorageClient.getInstaList;

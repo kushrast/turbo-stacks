@@ -1,11 +1,12 @@
 import FadeIn from 'react-fade-in';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTrash, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import {sortableContainer, sortableElement} from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
+import { withRouter } from "react-router";
 
-import {createNewList} from './api/Storage.js';
+import {createNewInstaList, getInstaList} from './api/Storage.js';
 
 import React from 'react';
 
@@ -18,7 +19,7 @@ class ListTitle extends React.Component {
     return (
         <div class="list-header columns is-centered">
           <div class="column is-7 field is-grouped">
-            <input class="input list-title-input underline" ref="input" defaultValue="New List" onChange={this.props.updateTitle}/>
+            <input class="input list-title-input underline" ref="input" defaultValue={this.props.value} onChange={this.props.updateTitle}/>
             <p class="buttons">
             {
               this.props.numItems > 0 ?
@@ -100,6 +101,16 @@ class ListItem extends React.Component {
                     <p class="control list-item is-expanded">
                       <input class="input list-item-input underline" ref="input" placeholder={this.getPlaceholder()} type="text" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
                     </p>
+                    { this.props.newListItem ?
+                      <p></p> :
+                    <p class="buttons">
+                      <button class="button is-ghost is-medium" onClick={() => {this.props.onDelete(this.props.index)}}>
+                        <span class="icon">
+                          <FontAwesomeIcon icon={faTimesCircle} size="xs"/>
+                        </span>
+                      </button>
+                    </p>
+                  }
                   </div>
                 </div>
               </div>
@@ -110,9 +121,9 @@ class ListItem extends React.Component {
   }
 }
 
-const SortableListItem = sortableElement(({value, onEnter}) => (
+const SortableListItem = sortableElement(({value, onEnter, index, onDelete}) => (
   <li class="list-item-container">
-    <ListItem value={value} onEnter={onEnter}/>
+    <ListItem value={value} onEnter={onEnter} index={index} onDelete={onDelete}/>
   </li>
 ));
 
@@ -121,6 +132,63 @@ const SortableListContainer = sortableContainer(({children}) => {
 });
 
 class InstaList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    var savedListData = getInstaList(props.match.params.id);
+
+    this.state = {
+      items: savedListData.items,
+      title: savedListData.title
+    }
+  }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+    this.setState(({items}) => ({
+      items: arrayMoveImmutable(items, oldIndex, newIndex),
+    }));
+  };
+
+  addNewItem = (newValue) => {
+    this.setState({items: [...this.state.items, newValue]});
+  }
+
+  updateTitle = (titleUpdateEvent) => {
+    this.setState({title: titleUpdateEvent.target.value});
+  }
+
+  saveList = () => {
+    var newListId = createNewInstaList(this.state.title, this.state.items);
+
+    this.props.history.push("/instalist/" + newListId);
+  }
+
+  onDelete = (index) => {
+    var newItemsList = this.state.items;
+    newItemsList.splice(index, 1);
+    this.setState({items: newItemsList});
+  }
+
+  render() {
+    return (
+      <div>
+          <ListTitle value={this.state.title} numItems={this.state.items.length} saveList={this.saveList} updateTitle={this.updateTitle} />
+          <SortableListContainer onSortEnd={this.onSortEnd} distance={1}>
+          {this.state.items.map((item, i) => (
+              <SortableListItem
+                key={item}
+                value={item}
+                index={i}
+                onEnter={(a)=>{console.log(a)}}
+                onDelete={this.onDelete}/>))}
+          </SortableListContainer>
+          <ListItem newListItem={true} onEnter={this.addNewItem}/>
+      </div>
+      );
+  }
+}
+
+class InstaListFormTemplate extends React.Component {
   constructor(props) {
     super(props);
 
@@ -145,20 +213,29 @@ class InstaList extends React.Component {
   }
 
   saveList = () => {
-    createNewList(this.state.title, this.state.items);
+    var newListId = createNewInstaList(this.state.title, this.state.items);
+
+    this.props.history.push("/instalist/" + newListId);
+  }
+
+  onDelete = (index) => {
+    var newItemsList = this.state.items;
+    newItemsList.splice(index, 1);
+    this.setState({items: newItemsList});
   }
 
   render() {
     return (
       <div>
-          <ListTitle numItems={this.state.items.length} saveList={this.saveList} updateTitle={this.updateTitle} />
-          <SortableListContainer onSortEnd={this.onSortEnd}>
+          <ListTitle value={this.state.title}  numItems={this.state.items.length} saveList={this.saveList} updateTitle={this.updateTitle} />
+          <SortableListContainer onSortEnd={this.onSortEnd} distance={1}>
           {this.state.items.map((item, i) => (
               <SortableListItem
                 key={item}
                 value={item}
                 index={i}
-                onEnter={(a)=>{console.log(a)}}/>))}
+                onEnter={(a)=>{console.log(a)}}
+                onDelete={this.onDelete}/>))}
           </SortableListContainer>
           <ListItem newListItem={true} onEnter={this.addNewItem}/>
       </div>
@@ -166,4 +243,5 @@ class InstaList extends React.Component {
   }
 }
 
-export default InstaList;
+export default withRouter(InstaList);
+export const InstaListForm = withRouter(InstaListFormTemplate);
