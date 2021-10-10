@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 class StorageClient {
 	constructor(){}
-	createNewInstaList(title, listItems){}
+	createNewInstaList(title, listItems, persist){}
 	getInstaList(listId){}
 }
 
@@ -15,7 +15,7 @@ class LocalStorageClient extends StorageClient {
 		}
 	}
 
-	createNewInstaList = (title, listItems) => {
+	createNewInstaList = (title, listItems, persist) => {
 		var storage = this.getLocalStorage();
 		if (storage != null) {
 			var listId = uuidv4();
@@ -30,7 +30,7 @@ class LocalStorageClient extends StorageClient {
 				currentLists = JSON.parse(currentListsAsString);
 			}
 
-			currentLists[listId] = {"title": title, "items": listItems, "creationTimestampMs": creationTimestampMs}
+			currentLists[listId] = {"title": title, "items": listItems, "creationTimestampMs": creationTimestampMs, "persist": persist}
 
 			storage.setItem("lists", JSON.stringify(currentLists));
 
