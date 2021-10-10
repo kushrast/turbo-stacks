@@ -92,31 +92,31 @@ class ListItem extends React.Component {
 
   render() {
     return (
-        <div class="columns is-centered">
-          <div class="column is-6">
-            <div class="card">
-              <div class="card-content list-card">
-                <div class="content">
-                  <div class="field is-grouped list-item-number">
-                    <p class="control list-item is-expanded">
-                      <input class="input list-item-input underline" ref="input" placeholder={this.getPlaceholder()} type="text" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
-                    </p>
-                    { this.props.newListItem ?
-                      <p></p> :
-                    <p class="buttons">
-                      <button class="button is-ghost is-medium" onClick={() => {this.props.onDelete(this.props.index)}}>
-                        <span class="icon">
-                          <FontAwesomeIcon icon={faTimesCircle} size="xs"/>
-                        </span>
-                      </button>
-                    </p>
-                  }
-                  </div>
-                </div>
-              </div>
+  <div class="columns is-centered">
+    <div class="column is-7">
+      <div class="card">
+        <div class="card-content list-card">
+          <div class="content">
+            <div class="field is-grouped list-item-number">
+              <p class="control list-item is-expanded">
+                <input class="input list-item-input underline" ref="input" placeholder={this.getPlaceholder()} type="text" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
+              </p>
+              { this.props.newListItem ?
+                <p></p> :
+              <p class="buttons">
+                <button class="button is-ghost is-medium" onClick={() => {this.props.onDelete(this.props.index)}}>
+                  <span class="icon">
+                    <FontAwesomeIcon icon={faTimesCircle} size="xs"/>
+                  </span>
+                </button>
+              </p>
+            }
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
       );
   }
 }
@@ -128,8 +128,30 @@ const SortableListItem = sortableElement(({value, onEnter, index, onDelete}) => 
 ));
 
 const SortableListContainer = sortableContainer(({children}) => {
-  return <ul>{children}</ul>;
+  return (
+    <ul>{children}</ul>
+  );
 });
+
+class ListControls extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div class="columns is-centered">
+        <div class="column is-7">
+        { !this.props.isToggled ? 
+          <button class="button is-info is-light" onClick={this.props.toggleList}>Toggle</button>
+          :
+          <button class="button is-info" onClick={this.props.toggleList}>Untoggle</button>
+        }
+        </div>
+      </div>
+      );
+  }
+}
 
 class InstaList extends React.Component {
   constructor(props) {
@@ -193,7 +215,9 @@ class InstaListFormTemplate extends React.Component {
     super(props);
 
     this.state = {
+      showAll: true,
       items: [],
+      allItems: [],
       title: "New Title"
     }
   }
@@ -205,7 +229,11 @@ class InstaListFormTemplate extends React.Component {
   };
 
   addNewItem = (newValue) => {
+    this.setState({allItems: [...this.state.allItems, newValue]});
+
+    if (this.state.showAll) {
     this.setState({items: [...this.state.items, newValue]});
+    }
   }
 
   updateTitle = (titleUpdateEvent) => {
@@ -224,10 +252,25 @@ class InstaListFormTemplate extends React.Component {
     this.setState({items: newItemsList});
   }
 
+  toggleList = () => {
+    this.setState({showAll: !this.state.showAll}, (newState) => {
+      if (this.state.showAll) {
+        this.setState({items: this.state.allItems});
+      } else {
+        if (this.state.allItems.length > 0) {
+          this.setState({items: [this.state.allItems[0]]});
+        } else {
+          this.setState({items: []});
+        }
+      }
+    });
+  }
+
   render() {
     return (
       <div>
           <ListTitle value={this.state.title}  numItems={this.state.items.length} saveList={this.saveList} updateTitle={this.updateTitle} />
+          <ListControls toggleList={this.toggleList} isToggled={!this.state.showAll}/>
           <SortableListContainer onSortEnd={this.onSortEnd} distance={1}>
           {this.state.items.map((item, i) => (
               <SortableListItem
@@ -237,7 +280,12 @@ class InstaListFormTemplate extends React.Component {
                 onEnter={(a)=>{console.log(a)}}
                 onDelete={this.onDelete}/>))}
           </SortableListContainer>
-          <ListItem newListItem={true} onEnter={this.addNewItem}/>
+          {
+            this.state.showAll ? 
+            <ListItem newListItem={true} onEnter={this.addNewItem}/>
+            :
+            <div></div>
+          }
       </div>
       );
   }

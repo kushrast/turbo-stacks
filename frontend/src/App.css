@@ -3,6 +3,11 @@
 	font-weight: bold;
 	color: #40826D;
 }
+
+.list-card {
+	padding-bottom: 10px !important;
+}
+
 .list-title-input {
 	padding: 0px 0px 0px 0px;
 	box-shadow: none !important;
