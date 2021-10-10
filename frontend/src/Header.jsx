@@ -32,7 +32,9 @@ class Header extends React.Component {
               {this.props.type}
             </p>
             <p>
-              <FontAwesomeIcon icon={faGripHorizontal} size="5x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
+              <a href="/">
+                <FontAwesomeIcon icon={faGripHorizontal} size="5x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
+              </a>
             </p>
           </div>
         </div>
