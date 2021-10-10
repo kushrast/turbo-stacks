@@ -147,6 +147,12 @@ class ListControls extends React.Component {
           :
           <button class="button is-info" onClick={this.props.toggleList}>Untoggle</button>
         }
+        <button class={!this.props.persist ? "button is-danger is-light" : "button is-primary is-light"} style={{marginLeft: "10px"}} onClick={this.props.togglePersist}>
+          { !this.props.persist ? 
+            <span> Don't persist </span> :
+            <span> Persist </span>
+          }
+        </button>
         </div>
       </div>
       );
@@ -174,7 +180,7 @@ class BaseInstaList extends React.Component {
     return (
       <div>
           <ListTitle value={this.props.title}  numItems={this.props.items.length} saveList={this.props.saveList} updateTitle={this.props.updateTitle} />
-          <ListControls toggleList={this.toggleList} isToggled={!this.state.showAll}/>
+          <ListControls toggleList={this.toggleList} isToggled={!this.state.showAll} togglePersist={this.props.togglePersist} persist={this.props.persist}/>
           <SortableListContainer onSortEnd={this.props.onSortEnd} distance={1}>
           {
             this.state.showAll ?
@@ -224,6 +230,7 @@ class InstaList extends React.Component {
     var savedListData = getInstaList(props.match.params.id);
 
     this.state = {
+      persist: savedListData.persist,
       items: savedListData.items,
       title: savedListData.title
     }
@@ -255,9 +262,13 @@ class InstaList extends React.Component {
     this.setState({items: newItemsList});
   }
 
+  togglePersist = () => {
+    this.setState({persist: !this.state.persist});
+  }
+
   render() {
     return (
-      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem}/>
+      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem} persist={this.state.persist} togglePersist={this.togglePersist}/>
       );
   }
 }
@@ -267,6 +278,7 @@ class InstaListFormTemplate extends React.Component {
     super(props);
 
     this.state = {
+      persist: false,
       items: [],
       title: "New Title"
     }
@@ -287,7 +299,7 @@ class InstaListFormTemplate extends React.Component {
   }
 
   saveList = () => {
-    var newListId = createNewInstaList(this.state.title, this.state.items);
+    var newListId = createNewInstaList(this.state.title, this.state.items, this.state.persist);
 
     this.props.history.push("/instalist/" + newListId);
   }
@@ -298,9 +310,13 @@ class InstaListFormTemplate extends React.Component {
     this.setState({items: newItemsList});
   }
 
+  togglePersist = () => {
+    this.setState({persist: !this.state.persist});
+  }
+
   render() {
     return (
-      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem}/>
+      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem}  persist={this.state.persist} togglePersist={this.togglePersist}/>
       );
   }
 }
