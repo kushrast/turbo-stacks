@@ -23,7 +23,7 @@ export default function App() {
     <div className="App">
       <section class="section">
         <div class="container">
-          <Header type="insta-list"/>
+          <Header/>
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
           <Switch>

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGripHorizontal } from '@fortawesome/free-solid-svg-icons';
+import { faGripHorizontal, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 
 
@@ -26,16 +26,20 @@ class Header extends React.Component {
   render () {
     return (
       <div>
-        <div class="columns is-centered">          
-          <div class="column is-1 has-text-centered">
-            <p className="header-text">
-              {this.props.type}
-            </p>
+        <div class="columns is-centered">
+          <div class="column is-2">
+            <a class="header-text" href="/">
+              <FontAwesomeIcon icon={faLayerGroup} size="2x" color="#417dc1"/> turbo
+            </a>
+          </div>
+          <div class="column is-auto has-text-centered">
             <p>
               <a href="/">
                 <FontAwesomeIcon icon={faGripHorizontal} size="5x" color={this.getIconColor()} onMouseEnter={this.toggleIsMouseOverIcon} onMouseLeave={this.toggleIsMouseOverIcon}/>
               </a>
             </p>
+          </div>
+          <div class="column is-2 has-text-centered">
           </div>
         </div>
       </div>
