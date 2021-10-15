@@ -78,7 +78,7 @@ class ListItem extends React.Component {
 
   onSubmit = () => {
     this.refs.input.blur();
-    this.props.onEnter(this.state.value);
+    this.props.onEnter(this.props.index, this.state.value);
     if (this.props.newListItem) {
       this.setState({value: ""});
     }
@@ -172,10 +172,6 @@ class BaseInstaList extends React.Component {
     this.setState({showAll: !this.state.showAll});
   }
 
-  addNewItem = (newValue) => {
-    this.setState({items: [...this.state.items, newValue]});
-  }
-
   render() {
     return (
       <div>
@@ -190,14 +186,16 @@ class BaseInstaList extends React.Component {
                   value={item}
                   index={i}
                   sortIndex={i}
-                  onDelete={this.props.onDelete}/>)))
+                  onDelete={this.props.onDelete}
+                  onEnter={this.props.onEnter}/>)))
             :
             (this.props.items.length > 0 ? 
               <SortableListItem
                   key={this.props.items[0]}
                   value={this.props.items[0]}
                   index={0}
-                  onDelete={this.props.onDelete}/>
+                  onDelete={this.props.onDelete}
+                  onEnter={this.props.onEnter}/>
               :
               <div></div>)
           }
@@ -242,7 +240,7 @@ class InstaList extends React.Component {
     }));
   };
 
-  addNewItem = (newValue) => {
+  addNewItem = (ignored, newValue) => {
     this.setState({items: [...this.state.items, newValue]});
   }
 
@@ -266,9 +264,17 @@ class InstaList extends React.Component {
     this.setState({persist: !this.state.persist});
   }
 
+  onEnter = (index, updatedItemValue) => {
+    if (this.state.items.length > index) {
+      var items = this.state.items;
+      items[index] = updatedItemValue;
+      this.setState({items: items})
+    }
+  }
+
   render() {
     return (
-      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem} persist={this.state.persist} togglePersist={this.togglePersist}/>
+      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem} persist={this.state.persist} togglePersist={this.togglePersist} onEnter={this.onEnter}/>
       );
   }
 }
@@ -290,7 +296,7 @@ class InstaListFormTemplate extends React.Component {
     }));
   };
 
-  addNewItem = (newValue) => {
+  addNewItem = (ignored, newValue) => {
     this.setState({items: [...this.state.items, newValue]});
   }
 
@@ -314,9 +320,17 @@ class InstaListFormTemplate extends React.Component {
     this.setState({persist: !this.state.persist});
   }
 
+  onEnter = (index, updatedItemValue) => {
+    if (this.state.items.length > index) {
+      var items = this.state.items;
+      items[index] = updatedItemValue;
+      this.setState({items: items})
+    }
+  }
+
   render() {
     return (
-      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem}  persist={this.state.persist} togglePersist={this.togglePersist}/>
+      <BaseInstaList title={this.state.title} items={this.state.items} saveList={this.saveList} updateTitle={this.updateTitle} toggleList={this.toggleList} onSortEnd={this.onSortEnd} onDelete={this.onDelete} addNewItem={this.addNewItem}  persist={this.state.persist} togglePersist={this.togglePersist} onEnter={this.onEnter}/>
       );
   }
 }
