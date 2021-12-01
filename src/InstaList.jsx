@@ -64,14 +64,7 @@ class ListItem extends React.Component {
     } 
     return this.state.value;
   }
-
-  getDefaultValue = () => {
-    if (this.props.newListItem) {
-      return "";
-    } 
-    return this.state.value;
-  }
-
+  
   updateInputValue = (inputElem) => {
     this.setState({value: inputElem.target.value});
   }
